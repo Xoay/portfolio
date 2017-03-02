@@ -3359,7 +3359,7 @@ a.logo:hover{
 .work-item a:hover{
     color: #111;
     border: none;
-    padding-bottom: 70px
+    padding-bottom: 70px;
 }
 .work-img{
     position: relative;
