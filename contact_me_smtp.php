@@ -1,29 +1,29 @@
 <?php
 if($_POST)
 {
-    $to_Email       = "support@bestlooker.pro"; // Replace with recipient email address
+    $to_Email       = "vluu87@gmail.com"; // Replace with recipient email address
 	$subject        = 'Message from website '.$_SERVER['SERVER_NAME']; //Subject line for emails
-    
+
     $host           = "smtp.mail.yahoo.com"; // Your SMTP server. For example, smtp.mail.yahoo.com
     $username       = "your.email@yahoo.com"; //For example, your.email@yahoo.com
     $password       = "1234567"; // Your password
     $SMTPSecure     = "ssl"; // For example, ssl
     $port           = 465; // For example, 465
-    
-    
+
+
     //check if its an ajax request, exit if not
     if(!isset($_SERVER['HTTP_X_REQUESTED_WITH']) AND strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) != 'xmlhttprequest') {
-    
+
         //exit script outputting json data
         $output = json_encode(
         array(
-            'type'=>'error', 
+            'type'=>'error',
             'text' => 'Request must come from Ajax'
         ));
-        
+
         die($output);
-    } 
-    
+    }
+
     //check $_POST vars are set, exit if any missing
     if(!isset($_POST["userName"]) || !isset($_POST["userEmail"]) || !isset($_POST["userMessage"]))
     {
@@ -35,10 +35,10 @@ if($_POST)
     $user_Name        = filter_var($_POST["userName"], FILTER_SANITIZE_STRING);
     $user_Email       = filter_var($_POST["userEmail"], FILTER_SANITIZE_EMAIL);
     $user_Message     = filter_var($_POST["userMessage"], FILTER_SANITIZE_STRING);
-    
+
     $user_Message = str_replace("\&#39;", "'", $user_Message);
     $user_Message = str_replace("&#39;", "'", $user_Message);
-    
+
     //additional php validation
     if(strlen($user_Name)<4) // If length is less than 4 it will throw an HTTP error.
     {
@@ -55,25 +55,25 @@ if($_POST)
         $output = json_encode(array('type'=>'error', 'text' => 'Too short message! Please enter something.'));
         die($output);
     }
-    
+
     //proceed with PHP email.
     include("php/PHPMailerAutoload.php"); //you have to upload class files "class.phpmailer.php" and "class.smtp.php"
- 
+
 	$mail = new PHPMailer();
-	 
+
 	$mail->IsSMTP();
 	$mail->SMTPAuth = true;
-	
+
 	$mail->Host = $host;
 	$mail->Username = $username;
 	$mail->Password = $password;
 	$mail->SMTPSecure = $SMTPSecure;
 	$mail->Port = $port;
-	
-	 
+
+
 	$mail->setFrom($username);
 	$mail->addReplyTo($user_Email);
-	 
+
 	$mail->AddAddress($to_Email);
 	$mail->Subject = $subject;
 	$mail->Body = $user_Message. "\r\n\n"  .'Name: '.$user_Name. "\r\n" .'Email: '.$user_Email;
@@ -89,6 +89,6 @@ if($_POST)
 	    $output = json_encode(array('type'=>'message', 'text' => 'Hi '.$user_Name .'! Thank you for your email'));
 		die($output);
 	}
-    
+
 }
 ?>
